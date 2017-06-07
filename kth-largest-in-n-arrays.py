@@ -8,10 +8,7 @@ Find K-th largest element in N arrays.
 
 You can swap elements in the array
 '''
-
-
 # heap
-
 
 class Node:
 
@@ -32,19 +29,6 @@ class Solution:
     @classmethod
     def KthInArrays(self, arrays, k):
         # Write your code here
-        # import heapq
-        # if not arrays:
-        #     return -1
-
-        # h = []
-        # heapq.heapify(h)
-        # for array in arrays:
-        #     array.sort()
-        #     h.extend(array[-k:])
-        #     h = heapq.nlargest(k, h)
-        # if len(h) == k:
-        #     return h[-1]
-        # return -1
         queue = []
         heapq.heapify(queue)
         for i, array in enumerate(arrays):
