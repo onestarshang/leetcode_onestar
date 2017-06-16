@@ -1,37 +1,63 @@
 # coding=utf8
 
 '''
-Given an array of n positive integers and a positive integer s, find the minimal
-length of a contiguous subarray of which the sum ≥ s. If there isn't one, return 0 instead.
+Given a string S and a string T, find the minimum window in S which will
+contain all the characters in T in complexity O(n).
 
-For example, given the array [2,3,1,2,4,3] and s = 7,
-the subarray [4,3] has the minimal length under the problem constraint.
+For example,
+S = "ADOBECODEBANC"
+T = "ABC"
+Minimum window is "BANC".
+
+Note:
+If there is no such window in S that covers all characters in T, return the
+empty string "".
+
+If there are multiple such windows, you are guaranteed that there will always
+be only one unique minimum window in S.
 '''
 
+class Solution:
+    """
+    @param source: A string
+    @param target: A string
+    @return: A string denote the minimum window
+             Return "" if there is no such a string
+    """
+    def minWindow(self, source, target):
+        # write your code here
+        if not source or not target:
+            return ''
 
-class Solution(object):
-    def minSubArrayLen(self, s, nums):
-        """
-        :type s: int
-        :type nums: List[int]
-        :rtype: int
-        """
+        source_hash = [0] * 256
+        target_hash = [0] * 256
+        for t in target:
+            target_hash[ord(t)] += 1
+
         import sys
-
-        if not nums:
-            return 0
-
-        left = right = 0
-        sum = 0
         ans = sys.maxint
+        min_str = ''
+        left = right = 0
 
-        for left in range(len(nums)):
-            while right < len(nums) and sum < s:
-                sum += nums[right]
-                right += 1
-            if sum >= s:
-                ans = min(ans, right - left)
-            sum -= nums[left]
-        if ans == sys.maxint:
-            return 0
-        return ans
+        def valid(source_hash, target_hash):  # source 中有没有 target
+            for i in range(256):
+                if target_hash[i] > source_hash[i]:
+                    return False
+            return True
+
+        for left in range(len(source)):
+            while not valid(source_hash, target_hash) and right < len(source):
+                source_hash[ord(source[right])] += 1
+                if right < len(source):
+                    right += 1
+                else:
+                    break
+
+            if valid(source_hash, target_hash):
+                if ans > right - left:
+                    ans = min(ans, right - left)
+                    min_str = source[left: right]
+
+            source_hash[ord(source[left])] -= 1
+        return min_str
+
